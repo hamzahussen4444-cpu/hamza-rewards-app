@@ -1,1 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hamza Rewards</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:white;
+}
+.container{
+  max-width:500px;
+  margin:auto;
+  padding:20px;
+}
+.header{
+  text-align:center;
+  padding:25px 10px;
+}
+.logo{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  background:#229ed9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:35px;
+  font-weight:bold;
+}
+h1{margin:15px 0 5px}
+.card{
+  background:#1e293b;
+  border-radius:18px;
+  padding:20px;
+  margin:15px 0;
+  box-shadow:0 5px 20px #0005;
+}
+.balance{
+  text-align:center;
+}
+.balance h2{
+  font-size:38px;
+  margin:10px 0;
+  color:#38bdf8;
+}
+.balance p{color:#94a3b8}
+button{
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:15px;
+  margin-top:10px;
+  font-size:16px;
+  font-weight:bold;
+  background:#229ed9;
+  color:white;
+}
+button:active{transform:scale(.98)}
+.task{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.task-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.icon{
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  background:#334155;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+.small-btn{
+  width:auto;
+  padding:10px 14px;
+  margin:0;
+  font-size:14px;
+}
+.done{
+  background:#16a34a;
+}
+#message{
+  text-align:center;
+  color:#38bdf8;
+  min-height:25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">H</div>
+    <h1>Hamza Rewards</h1>
+    <p>Earn points and rewards</p>
+  </div>
+
+  <div class="card balance">
+    <p>Your Balance</p>
+    <h2 id="points">0</h2>
+    <p>⭐ Points</p>
+    <button onclick="dailyReward()">🎁 Claim Daily Reward</button>
+  </div>
+
+  <div id="message"></div>
+
+  <div class="card">
+    <h2>🎯 Tasks</h2>
+
+    <div class="task">
+      <div class="task-info">
+        <div class="icon">📢</div>
+        <div>
+          <b>Join Telegram</b>
+          <p>+100 points</p>
+        </div>
+      </div>
+      <button class="small-btn" onclick="claimTask(this,100)">
+        Claim
+      </button>
+    </div>
+
+    <hr>
+
+    <div class="task">
+      <div class="task-info">
+        <div class="icon">👥</div>
+        <div>
+          <b>Invite Friends</b>
+          <p>+250 points</p>
+        </div>
+      </div>
+      <button class="small-btn" onclick="inviteFriend()">
+        Invite
+      </button>
+    </div>
+
+    <hr>
+
+    <div class="task">
+      <div class="task-info">
+        <div class="icon">⭐</div>
+        <div>
+          <b>Daily Check-in</b>
+          <p>+50 points</p>
+        </div>
+      </div>
+      <button class="small-btn" onclick="dailyCheckin(this)">
+        Check-in
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🏆 Rewards</h2>
+    <p>1000 ⭐ Points = Reward</p>
+    <button onclick="withdraw()">
+      💰 Request Reward
+    </button>
+  </div>
+
+</div>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready();
+tg.expand();
+
+let points = Number(localStorage.getItem("hamza_points")) || 0;
+
+function updatePoints(){
+  document.getElementById("points").textContent = points;
+  localStorage.setItem("hamza_points", points);
+}
+
+function message(text){
+  document.getElementById("message").textContent = text;
+  setTimeout(()=>{
+    document.getElementById("message").textContent = "";
+  },3000);
+}
+
+function claimTask(button, amount){
+  if(button.classList.contains("done")){
+    message("Task already completed.");
+    return;
+  }
+
+  points += amount;
+  button.classList.add("done");
+  button.textContent = "✓ Done";
+  updatePoints();
+  message("🎉 +" + amount + " points added!");
+}
+
+function dailyReward(){
+  const today = new Date().toDateString();
+  const last = localStorage.getItem("daily_reward");
+
+  if(last === today){
+    message("⏳ Come back tomorrow!");
+    return;
+  }
+
+  points += 100;
+  localStorage.setItem("daily_reward", today);
+  updatePoints();
+  message("🎁 +100 daily points!");
+}
+
+function dailyCheckin(button){
+  const today = new Date().toDateString();
+  const last = localStorage.getItem("checkin");
+
+  if(last === today){
+    message("You already checked in today.");
+    return;
+  }
+
+  points += 50;
+  localStorage.setItem("checkin", today);
+
+  button.classList.add("done");
+  button.textContent = "✓ Done";
+
+  updatePoints();
+  message("✅ +50 points!");
+}
+
+function inviteFriend(){
+  const bot = "https://t.me/your_bot";
+
+  if(tg.openTelegramLink){
+    tg.openTelegramLink(bot);
+  }else{
+    window.open(bot,"_blank");
+  }
+}
+
+function withdraw(){
+  if(points < 1000){
+    message("❌ You need at least 1000 points.");
+    return;
+  }
+
+  message("✅ Reward request received!");
+  
+  if(tg.showPopup){
+    tg.showPopup({
+      title:"Reward Request",
+      message:"Your reward request has been received.",
+      buttons:[{type:"ok"}]
+    });
+  }
+}
+
+updatePoints();
+</script>
+
+</body>
+</html>

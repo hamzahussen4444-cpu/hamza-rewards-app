@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hamza Rewards</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src='//libtl.com/sdk.js' data-zone='11961014' data-sdk='show_11961014'></script>
 
 <style>
 *{
@@ -987,6 +988,11 @@ button:active{transform:scale(.98)}
   </div>
 
   <div id="message"></div>
+  <div class="card">
+  <h2>📺 Watch Ads & Earn</h2>
+  <p>Watch an ad and earn 50 points</p>
+  <button onclick="watchAd()">▶ Watch Ad → +50 Points</button>
+</div>
 
   <div class="card">
     <h2>🎯 Tasks</h2>
@@ -1062,6 +1068,20 @@ function message(text){
   setTimeout(()=>{
     document.getElementById("message").textContent = "";
   },3000);
+}
+  function watchAd(){
+  if(typeof show_11961014 !== "function"){
+    message("⚠️ Ad is not ready yet.");
+    return;
+  }
+
+  show_11961014().then(() => {
+    points += 50;
+    updatePoints();
+    message("🎉 +50 points!");
+  }).catch(() => {
+    message("❌ Ad could not be shown.");
+  });
 }
 
 function claimTask(button, amount){

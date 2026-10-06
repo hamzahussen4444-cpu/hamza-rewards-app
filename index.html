@@ -1069,20 +1069,46 @@ function message(text){
     document.getElementById("message").textContent = "";
   },3000);
 }
-  function watchAd(){
-  if(typeof show_11961014 !== "function"){
-    message("⚠️ Ad is not ready yet.");
-    return;
-  }
+  let adReady = false;
 
-  show_11961014().then(() => {
-    points += 50;
-    updatePoints();
-    message("🎉 +50 points!");
-  }).catch(() => {
-    message("❌ Ad could not be shown.");
-  });
+function preloadAd(){
+    if(typeof show_11961014 !== "function"){
+        return;
+    }
+
+    const ymid = String(tg.initDataUnsafe?.user?.id || "unknown");
+
+    show_11961014({
+        type: "preload",
+        ymid: ymid
+    }).then(() => {
+        adReady = true;
+    }).catch(() => {
+        adReady = false;
+    });
 }
+
+function watchAd(){
+    if(typeof show_11961014 !== "function"){
+        message("⚠️ Ad is not ready yet.");
+        return;
+    }
+
+    const ymid = String(tg.initDataUnsafe?.user?.id || "unknown");
+
+    show_11961014({
+        ymid: ymid
+    }).then(() => {
+        points += 50;
+        updatePoints();
+        message("🎉 +50 points!");
+        preloadAd();
+    }).catch(() => {
+        message("❌ Ad could not be shown.");
+    });
+}
+
+preloadAd();
 
 function claimTask(button, amount){
   if(button.classList.contains("done")){

@@ -7,6 +7,873 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#18202f;
+}
+
+.app{
+  max-width:520px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:85px;
+}
+
+/* Header */
+.header{
+  background:#17212f;
+  color:white;
+  padding:18px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#229ed9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.header h2{
+  margin:0;
+  font-size:19px;
+}
+
+.header p{
+  margin:3px 0 0;
+  color:#aeb8c5;
+  font-size:12px;
+}
+
+.lang{
+  background:white;
+  color:#17212f;
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* Balance */
+.balance{
+  margin:18px;
+  padding:22px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#554315,#9b791b);
+  color:white;
+  box-shadow:0 8px 25px #0002;
+}
+
+.balance-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.balance small{
+  color:#e5d59d;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+.balance h1{
+  margin:8px 0 2px;
+  font-size:38px;
+}
+
+.balance p{
+  margin:0;
+  color:#ddd0a8;
+}
+
+.user{
+  text-align:center;
+}
+
+.avatar{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#ff6b6b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  font-weight:bold;
+  margin:auto;
+}
+
+.user b{
+  display:block;
+  margin-top:5px;
+}
+
+/* Cards */
+.card{
+  background:white;
+  margin:16px 18px;
+  padding:18px;
+  border-radius:22px;
+  box-shadow:0 2px 12px #0000000d;
+}
+
+.card h2{
+  margin:0 0 15px;
+  font-size:20px;
+}
+
+.info{
+  color:#7d8795;
+  font-size:14px;
+  margin-bottom:15px;
+}
+
+/* Watch Ad */
+.ad-box{
+  border:2px solid #e2c95e;
+  border-radius:22px;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:#f8f9fc;
+}
+
+.play{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  background:#1d2035;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+}
+
+.ad-info{
+  flex:1;
+}
+
+.ad-info b{
+  font-size:19px;
+}
+
+.ad-info p{
+  margin:5px 0 0;
+  color:#858e9b;
+  font-size:14px;
+}
+
+.reward{
+  background:#303343;
+  color:white;
+  border-radius:13px;
+  padding:11px 14px;
+  font-weight:bold;
+}
+
+.watch-btn{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  margin-top:14px;
+  background:#c9a227;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+/* Tasks */
+.task{
+  border:1px solid #dce1e8;
+  border-radius:18px;
+  padding:14px;
+  margin:12px 0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.task-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:#eef1f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:23px;
+}
+
+.task-info{
+  flex:1;
+}
+
+.task-info b{
+  font-size:16px;
+}
+
+.task-info p{
+  margin:5px 0 0;
+  color:#7d8795;
+  font-size:13px;
+}
+
+.task-btn{
+  border:0;
+  background:#eee9d9;
+  color:#665721;
+  border-radius:12px;
+  padding:11px 14px;
+  font-weight:bold;
+}
+
+/* Invite */
+.ref{
+  background:#f1f4f8;
+  padding:13px;
+  border-radius:12px;
+  font-size:13px;
+  word-break:break-all;
+}
+
+.main-btn{
+  width:100%;
+  border:0;
+  border-radius:14px;
+  padding:15px;
+  margin-top:12px;
+  background:#229ed9;
+  color:white;
+  font-weight:bold;
+  font-size:15px;
+}
+
+/* Withdraw */
+.method{
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.method button{
+  flex:1;
+  border:1px solid #ddd;
+  background:white;
+  border-radius:15px;
+  padding:14px 5px;
+  font-weight:bold;
+}
+
+.method button.active{
+  border:2px solid #d7b52c;
+  background:#fffbea;
+}
+
+.input{
+  width:100%;
+  padding:15px;
+  border:1px solid #d8dde5;
+  border-radius:13px;
+  margin:7px 0 12px;
+  font-size:15px;
+}
+
+/* Navigation */
+.nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:520px;
+  height:75px;
+  background:white;
+  border-top:1px solid #ddd;
+  display:flex;
+  z-index:100;
+}
+
+.nav button{
+  flex:1;
+  border:0;
+  background:white;
+  color:#9aa3af;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.nav button.active{
+  color:#b08c16;
+}
+
+.nav-icon{
+  display:block;
+  font-size:23px;
+  margin-bottom:3px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.message{
+  text-align:center;
+  margin:10px 18px;
+  color:#b08c16;
+  font-weight:bold;
+  min-height:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-title">
+      <div class="logo">H</div>
+      <div>
+        <h2>Hamza Rewards</h2>
+        <p>Earn points & rewards</p>
+      </div>
+    </div>
+
+    <div class="lang">EN</div>
+  </div>
+
+
+  <!-- BALANCE -->
+  <div class="balance">
+    <div class="balance-top">
+
+      <div>
+        <small>TOTAL BALANCE</small>
+        <h1 id="points">0</h1>
+        <p>⭐ Points available</p>
+      </div>
+
+      <div class="user">
+        <div class="avatar">HH</div>
+        <b>Hamza</b>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div id="message" class="message"></div>
+
+
+  <!-- ADS PAGE -->
+  <div id="adsPage" class="page active">
+
+    <div class="card">
+
+      <h2>🎬 Watch Ads & Earn</h2>
+
+      <div class="info">
+        Watch a short ad and earn points.
+      </div>
+
+      <div class="ad-box">
+
+        <div class="play">▶</div>
+
+        <div class="ad-info">
+          <b>Watch Ad</b>
+          <p>Complete video to earn</p>
+        </div>
+
+        <div class="reward">+50</div>
+
+      </div>
+
+      <button class="watch-btn" onclick="watchAd()">
+        🎬 Watch Ad → +50 Points
+      </button>
+
+      <div class="info" style="margin-top:15px;margin-bottom:0;">
+        Today: <b id="adsToday">0</b> / 15 ads
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h2>📊 Your Ad Statistics</h2>
+
+      <p class="info">
+        Total watched: <b id="totalAds">0</b> ads
+      </p>
+
+      <p class="info">
+        Total earned: <b id="totalEarned">0</b> ⭐ points
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- TASKS PAGE -->
+  <div id="tasksPage" class="page">
+
+    <div class="card">
+
+      <h2>✅ Complete Tasks & Earn</h2>
+
+      <div class="task">
+
+        <div class="task-icon">📢</div>
+
+        <div class="task-info">
+          <b>Join Telegram</b>
+          <p>Earn +100 points</p>
+        </div>
+
+        <button class="task-btn" onclick="claimTask(this,100)">
+          Claim
+        </button>
+
+      </div>
+
+
+      <div class="task">
+
+        <div class="task-icon">🤖</div>
+
+        <div class="task-info">
+          <b>Start Bot</b>
+          <p>Earn +100 points</p>
+        </div>
+
+        <button class="task-btn" onclick="claimTask(this,100)">
+          Claim
+        </button>
+
+      </div>
+
+
+      <div class="task">
+
+        <div class="task-icon">⭐</div>
+
+        <div class="task-info">
+          <b>Daily Check-in</b>
+          <p>Earn +50 points</p>
+        </div>
+
+        <button class="task-btn" onclick="dailyCheckin(this)">
+          Check-in
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- INVITE PAGE -->
+  <div id="invitePage" class="page">
+
+    <div class="card">
+
+      <h2>👥 Invite Friends</h2>
+
+      <p class="info">
+        Invite friends and earn bonus points.
+      </p>
+
+      <div class="ref" id="refLink">
+        https://t.me/Hamza_ads_reward_bot?start=ref
+      </div>
+
+      <button class="main-btn" onclick="inviteFriend()">
+        👥 Invite Friends
+      </button>
+
+    </div>
+
+    <div class="card">
+      <h2>🎁 Referral Bonus</h2>
+      <p class="info">
+        Your referral reward: <b>+250 points</b>
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- WITHDRAW PAGE -->
+  <div id="withdrawPage" class="page">
+
+    <div class="card">
+
+      <h2>💵 Payment Method</h2>
+
+      <div class="method">
+        <button class="active" onclick="selectMethod(this)">
+          ₮<br>USDT TRC20
+        </button>
+
+        <button onclick="selectMethod(this)">
+          💳<br>PayPal
+        </button>
+
+        <button onclick="selectMethod(this)">
+          📱<br>Mobile Top-Up
+        </button>
+      </div>
+
+      <label>AMOUNT</label>
+
+      <input
+        class="input"
+        id="withdrawAmount"
+        type="number"
+        placeholder="Enter amount"
+      >
+
+      <label>WALLET / ACCOUNT</label>
+
+      <input
+        class="input"
+        id="wallet"
+        placeholder="Enter wallet or account"
+      >
+
+      <button class="main-btn" onclick="withdraw()">
+        💸 Submit Withdrawal Request
+      </button>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>📜 Withdrawal History</h2>
+
+      <p class="info">
+        No withdrawal requests yet.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- BOTTOM NAV -->
+  <div class="nav">
+
+    <button class="active" onclick="showPage('adsPage',this)">
+      <span class="nav-icon">▶</span>
+      Ads
+    </button>
+
+    <button onclick="showPage('tasksPage',this)">
+      <span class="nav-icon">☑</span>
+      Tasks
+    </button>
+
+    <button onclick="showPage('invitePage',this)">
+      <span class="nav-icon">👥</span>
+      Invite
+    </button>
+
+    <button onclick="showPage('withdrawPage',this)">
+      <span class="nav-icon">＄</span>
+      Withdraw
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp;
+
+tg.ready();
+tg.expand();
+
+let points =
+  Number(localStorage.getItem("hamza_points")) || 0;
+
+let totalAds =
+  Number(localStorage.getItem("hamza_total_ads")) || 0;
+
+let adsToday =
+  Number(localStorage.getItem("hamza_ads_today")) || 0;
+
+let adsDate =
+  localStorage.getItem("hamza_ads_date") || "";
+
+const today = new Date().toDateString();
+
+if(adsDate !== today){
+  adsToday = 0;
+  adsDate = today;
+
+  localStorage.setItem("hamza_ads_today",0);
+  localStorage.setItem("hamza_ads_date",today);
+}
+
+
+function updateUI(){
+
+  document.getElementById("points").textContent =
+    points;
+
+  document.getElementById("adsToday").textContent =
+    adsToday;
+
+  document.getElementById("totalAds").textContent =
+    totalAds;
+
+  document.getElementById("totalEarned").textContent =
+    totalAds * 50;
+
+  localStorage.setItem(
+    "hamza_points",
+    points
+  );
+
+  localStorage.setItem(
+    "hamza_total_ads",
+    totalAds
+  );
+
+  localStorage.setItem(
+    "hamza_ads_today",
+    adsToday
+  );
+
+}
+
+
+function showMessage(text){
+
+  document.getElementById("message").textContent =
+    text;
+
+  setTimeout(function(){
+
+    document.getElementById("message").textContent =
+      "";
+
+  },3000);
+
+}
+
+
+function showPage(pageId,button){
+
+  document.querySelectorAll(".page")
+    .forEach(function(page){
+      page.classList.remove("active");
+    });
+
+  document.getElementById(pageId)
+    .classList.add("active");
+
+  document.querySelectorAll(".nav button")
+    .forEach(function(btn){
+      btn.classList.remove("active");
+    });
+
+  button.classList.add("active");
+
+  window.scrollTo(0,0);
+}
+
+
+/* TEMPORARY DEMO
+   Monetag will be connected in STEP 2.
+*/
+function watchAd(){
+
+  if(adsToday >= 15){
+
+    showMessage("⏳ Daily ad limit reached.");
+
+    return;
+  }
+
+  points += 50;
+
+  totalAds++;
+  adsToday++;
+
+  updateUI();
+
+  showMessage("🎉 +50 points added!");
+}
+
+
+function claimTask(button,amount){
+
+  if(button.dataset.done === "yes"){
+
+    showMessage("Task already completed.");
+
+    return;
+  }
+
+  points += amount;
+
+  button.dataset.done = "yes";
+  button.textContent = "✓ Done";
+
+  updateUI();
+
+  showMessage(
+    "🎉 +" + amount + " points added!"
+  );
+}
+
+
+function dailyCheckin(button){
+
+  const last =
+    localStorage.getItem("hamza_checkin");
+
+  if(last === today){
+
+    showMessage(
+      "⏳ You already checked in today."
+    );
+
+    return;
+  }
+
+  points += 50;
+
+  localStorage.setItem(
+    "hamza_checkin",
+    today
+  );
+
+  button.textContent = "✓ Done";
+
+  updateUI();
+
+  showMessage("✅ +50 points!");
+}
+
+
+function inviteFriend(){
+
+  const link =
+    "https://t.me/Hamza_ads_reward_bot?start=ref";
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"Hamza Rewards",
+      text:"Join Hamza Rewards and earn points!",
+      url:link
+    });
+
+  }else{
+
+    if(tg.openTelegramLink){
+
+      tg.openTelegramLink(
+        "https://t.me/share/url?url=" +
+        encodeURIComponent(link) +
+        "&text=" +
+        encodeURIComponent(
+          "Join Hamza Rewards and earn points!"
+        )
+      );
+
+    }
+
+  }
+
+}
+
+
+function selectMethod(button){
+
+  document.querySelectorAll(".method button")
+    .forEach(function(btn){
+      btn.classList.remove("active");
+    });
+
+  button.classList.add("active");
+}
+
+
+function withdraw(){
+
+  if(points < 1000){
+
+    showMessage(
+      "❌ Minimum withdrawal is 1000 points."
+    );
+
+    return;
+  }
+
+  const amount =
+    document.getElementById("withdrawAmount").value;
+
+  const wallet =
+    document.getElementById("wallet").value;
+
+  if(!amount || !wallet){
+
+    showMessage(
+      "❌ Please enter amount and wallet/account."
+    );
+
+    return;
+  }
+
+  showMessage(
+    "✅ Withdrawal request received!"
+  );
+
+}
+
+
+updateUI();
+
+</script>
+
+</body>
+</html> 
+
+<style>
 *{box-sizing:border-box}
 body{
   margin:0;

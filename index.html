@@ -2,167 +2,353 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Hamza Rewards</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="//libtl.com/sdk.js" data-zone="11961014" data-sdk="show_11961014"></script>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding-bottom:80px}
-    .app{max-width:480px;margin:0 auto;padding:16px}
-    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-    .logo{width:45px;height:45px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px}
-    .balance{background:linear-gradient(135deg,#554315,#9b791b);border-radius:16px;padding:20px;margin-bottom:20px;color:white}
-    .balance h1{font-size:32px;margin:8px 0}
-    .card{background:#1e293b;border-radius:16px;padding:18px;margin-bottom:16px}
-    .card h2{margin-bottom:12px;font-size:18px}
-    button{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;background:#22c55e;color:white}
-    button:active{transform:scale(0.98)}
-    #message{text-align:center;min-height:24px;margin:10px 0;color:#38bdf8}
-    .nav{position:fixed;bottom:0;left:0;right:0;background:#1e293b;display:flex;padding:10px 0;border-top:1px solid #334155}
-    .nav button{background:transparent;color:#94a3b8;flex:1;font-size:12px}
-    .nav button.active{color:#22c55e}
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f7;color:#1a1a1a;min-height:100vh;padding-bottom:75px}
+    .header{background:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee}
+    .logo{font-size:22px;font-weight:800;color:#1a1a1a}
+    .logo span{color:#f59e0b}
+    .header-btns{display:flex;gap:8px}
+    .h-btn{background:#f3f4f6;border:none;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600}
+    
+    .balance-card{margin:16px;background:linear-gradient(135deg,#1a1a1a,#333);border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden}
+    .balance-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(245,158,11,0.15);border-radius:50%}
+    .balance-label{font-size:12px;opacity:0.7;letter-spacing:1px}
+    .balance-amount{font-size:36px;font-weight:800;margin:6px 0}
+    .balance-sub{font-size:13px;opacity:0.6}
+    .user-badge{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.15);padding:6px 12px;border-radius:20px;font-size:12px;display:flex;align-items:center;gap:6px}
+    .avatar{width:28px;height:28px;background:#f59e0b;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#000}
+
+    .page{display:none;padding:0 16px 20px}
+    .page.active{display:block}
+
+    .card{background:#fff;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,0.04)}
+    .card h3{font-size:16px;margin-bottom:6px}
+    .card p{font-size:13px;color:#666;margin-bottom:14px}
+
+    .watch-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:14px}
+    .play-btn{width:50px;height:50px;background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;flex-shrink:0}
+    .watch-info{flex:1}
+    .watch-info b{display:block;font-size:15px}
+    .watch-info span{font-size:12px;color:#666}
+    .reward-badge{background:#1a1a1a;color:#f59e0b;padding:8px 14px;border-radius:12px;font-weight:700;font-size:14px}
+
+    .stats{display:flex;gap:10px}
+    .stat{flex:1;background:#f9fafb;border-radius:14px;padding:14px;text-align:center}
+    .stat .num{font-size:20px;font-weight:800}
+    .stat .lbl{font-size:11px;color:#888;margin-top:2px}
+
+    .task-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #f0f0f0}
+    .task-item:last-child{border-bottom:none}
+    .task-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .task-info{flex:1}
+    .task-info b{display:block;font-size:14px}
+    .task-info span{font-size:12px;color:#888}
+    .claim-btn{background:#f59e0b;color:#000;border:none;padding:8px 14px;border-radius:10px;font-weight:700;font-size:13px}
+    .claim-btn.done{background:#e5e7eb;color:#999}
+
+    .invite-box{background:#fef3c7;border-radius:16px;padding:16px;text-align:center;margin-bottom:14px}
+    .invite-box .count{font-size:32px;font-weight:800;color:#f59e0b}
+    .ref-link{background:#f3f4f6;padding:12px;border-radius:12px;font-size:12px;word-break:break-all;margin:12px 0}
+
+    .support-form textarea{width:100%;height:100px;border:1px solid #e5e7eb;border-radius:12px;padding:12px;font-size:14px;resize:none;margin-bottom:10px}
+    .support-form button{width:100%;background:#1a1a1a;color:#fff;border:none;padding:14px;border-radius:12px;font-weight:700}
+
+    .method{display:flex;gap:10px;margin-bottom:14px}
+    .method button{flex:1;padding:12px;border:2px solid #e5e7eb;border-radius:12px;background:#fff;font-weight:600}
+    .method button.active{border-color:#f59e0b;background:#fef3c7}
+    input{width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:12px;font-size:15px;margin-bottom:10px}
+
+    .main-btn{width:100%;background:#f59e0b;color:#000;border:none;padding:16px;border-radius:14px;font-size:16px;font-weight:800}
+
+    .nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #eee;padding:6px 0;z-index:100;box-shadow:0 -2px 10px rgba(0,0,0,0.05)}
+    .nav button{flex:1;background:none;border:none;padding:8px 0;font-size:11px;color:#999;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .nav button.active{color:#f59e0b;font-weight:700}
+    .nav .icon{font-size:20px}
+
+    #msg{text-align:center;padding:8px;font-size:13px;color:#f59e0b;min-height:20px}
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="header">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="logo">H</div>
-        <div>
-          <h2>Hamza Rewards</h2>
-          <p style="font-size:13px;color:#94a3b8">Earn points & rewards</p>
-        </div>
-      </div>
-      <div style="background:#1e293b;padding:6px 12px;border-radius:20px;font-size:13px">EN</div>
-    </div>
-
-    <div class="balance">
-      <small>TOTAL BALANCE</small>
-      <h1 id="points">0</h1>
-      <p>★ Points available</p>
-    </div>
-
-    <div id="message"></div>
-
-    <div class="card">
-      <h2>▶ Watch Ads & Earn</h2>
-      <p style="color:#94a3b8;margin-bottom:16px">Watch a short ad and earn 50 points</p>
-      <button onclick="watchAd()">▶ Watch Ad → +50 Points</button>
-      <p style="margin-top:12px;font-size:13px;color:#94a3b8">Today: <span id="adsToday">0</span> / 15 ads</p>
-    </div>
-
-    <div class="card">
-      <h2>📋 Tasks</h2>
-      <button onclick="claimTask(this,100)" style="margin-bottom:10px">Join Telegram → +100</button>
-      <button onclick="dailyCheckin(this)">Daily Check-in → +50</button>
-    </div>
-
-    <div class="card">
-      <h2>💰 Withdraw</h2>
-      <p style="color:#94a3b8;margin-bottom:12px">Minimum 1000 points</p>
-      <button onclick="withdraw()">Request Withdraw</button>
+  <div class="header">
+    <div class="logo">Hamza<span>Rewards</span></div>
+    <div class="header-btns">
+      <button class="h-btn" onclick="showPage('support')">Support</button>
+      <button class="h-btn">EN</button>
     </div>
   </div>
 
+  <div class="balance-card">
+    <div class="balance-label">TOTAL BALANCE</div>
+    <div class="balance-amount" id="points">0</div>
+    <div class="balance-sub">Points available</div>
+    <div class="user-badge">
+      <div class="avatar">H</div>
+      <div>
+        <div style="font-weight:700">Hamza</div>
+        <div style="font-size:10px;opacity:0.7" id="uid">ID: ---</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="msg"></div>
+
+  <!-- ADS PAGE -->
+  <div class="page active" id="ads">
+    <div class="card">
+      <h3>Watch Ads & Earn</h3>
+      <p>Complete and watch a short video ad and earn points</p>
+      <div class="watch-box">
+        <div class="play-btn">▶</div>
+        <div class="watch-info">
+          <b>Watch Ad</b>
+          <span>Complete video to earn instantly</span>
+        </div>
+        <div class="reward-badge">+50</div>
+      </div>
+      <button class="main-btn" onclick="watchAd()">Watch Ad Now</button>
+      <p style="text-align:center;margin-top:10px;font-size:12px;color:#888">Today: <span id="adsToday">0</span> / 15 ads</p>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num" id="totalAds">0</div>
+        <div class="lbl">TOTAL WATCHED</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="totalEarned">0</div>
+        <div class="lbl">TOTAL EARNED</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS PAGE -->
+  <div class="page" id="tasks">
+    <div class="card">
+      <h3>🎮 Games</h3>
+      <div class="task-item">
+        <div class="task-icon" style="background:#dbeafe">🎮</div>
+        <div class="task-info"><b>Play Lucky Game</b><span>+80 points</span></div>
+        <button class="claim-btn" onclick="claim(this,80)">Claim</button>
+      </div>
+      <div class="task-item">
+        <div class="task-icon" style="background:#fce7f3">🎯</div>
+        <div class="task-info"><b>Daily Spin</b><span>+40 points</span></div>
+        <button class="claim-btn" onclick="claim(this,40)">Claim</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🎁 Offers</h3>
+      <div class="task-item">
+        <div class="task-icon" style="background:#dcfce7">📱</div>
+        <div class="task-info"><b>Install App Offer</b><span>+120 points</span></div>
+        <button class="claim-btn" onclick="claim(this,120)">Claim</button>
+      </div>
+      <div class="task-item">
+        <div class="task-icon" style="background:#fef3c7">🛒</div>
+        <div class="task-info"><b>Shopping Offer</b><span>+90 points</span></div>
+        <button class="claim-btn" onclick="claim(this,90)">Claim</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📋 Surveys</h3>
+      <div class="task-item">
+        <div class="task-icon" style="background:#e0e7ff">📝</div>
+        <div class="task-info"><b>Quick Survey</b><span>+60 points</span></div>
+        <button class="claim-btn" onclick="claim(this,60)">Claim</button>
+      </div>
+      <div class="task-item">
+        <div class="task-icon" style="background:#fce7f3">📊</div>
+        <div class="task-info"><b>Long Survey</b><span>+150 points</span></div>
+        <button class="claim-btn" onclick="claim(this,150)">Claim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVITE PAGE -->
+  <div class="page" id="invite">
+    <div class="card">
+      <h3>👥 Invite Friends</h3>
+      <p>Invite at least <b>7 friends</b> to unlock withdrawals</p>
+      <div class="invite-box">
+        <div class="count" id="invites">0</div>
+        <div>Friends Invited</div>
+        <div style="font-size:12px;margin-top:4px;color:#666">Need 7 to withdraw</div>
+      </div>
+      <div class="ref-link" id="refLink">Loading...</div>
+      <button class="main-btn" onclick="shareInvite()">Share Invite Link</button>
+    </div>
+  </div>
+
+  <!-- SUPPORT PAGE -->
+  <div class="page" id="support">
+    <div class="card">
+      <h3>🛠 Support</h3>
+      <p>Tell us your problem. We will reply soon.</p>
+      <div class="support-form">
+        <textarea id="supportText" placeholder="Describe your problem here..."></textarea>
+        <button onclick="sendSupport()">Send Message</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Common Issues</h3>
+      <p style="font-size:13px;line-height:1.6">
+        • Ads not showing → Try again later or change network<br>
+        • Points not adding → Restart the app<br>
+        • Withdrawal delay → Usually 24-48 hours
+      </p>
+    </div>
+  </div>
+
+  <!-- PROFILE PAGE -->
+  <div class="page" id="profile">
+    <div class="card">
+      <h3>👤 Profile</h3>
+      <p>Balance: <b id="pPoints">0</b> points</p>
+      <p style="margin-top:8px">Invites: <b id="pInvites">0</b> / 7</p>
+    </div>
+    <div class="card">
+      <h3>💰 Withdraw</h3>
+      <p>Minimum 1000 points • Need 7 invites</p>
+      <div class="method">
+        <button class="active" onclick="selectMethod(this,'telebirr')">Telebirr</button>
+        <button onclick="selectMethod(this,'cbe')">CBE</button>
+      </div>
+      <input type="number" id="wAmount" placeholder="Amount (points)">
+      <input type="text" id="wAccount" placeholder="Phone / Account number">
+      <button class="main-btn" onclick="withdraw()">Request Withdrawal</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
   <div class="nav">
-    <button class="active">Ads</button>
-    <button>Tasks</button>
-    <button>Invite</button>
-    <button>Withdraw</button>
+    <button class="active" onclick="showPage('ads',this)"><span class="icon">▶</span>Ads</button>
+    <button onclick="showPage('tasks',this)"><span class="icon">📋</span>Tasks</button>
+    <button onclick="showPage('invite',this)"><span class="icon">👥</span>Invite</button>
+    <button onclick="showPage('support',this)"><span class="icon">🛠</span>Support</button>
+    <button onclick="showPage('profile',this)"><span class="icon">👤</span>Profile</button>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+    tg.setHeaderColor('#ffffff');
+    tg.setBackgroundColor('#f5f5f7');
 
-    let points = Number(localStorage.getItem("hamza_points")) || 0;
-    let adsToday = Number(localStorage.getItem("hamza_ads_today")) || 0;
+    let points = Number(localStorage.getItem('hr_points')) || 0;
+    let totalAds = Number(localStorage.getItem('hr_totalAds')) || 0;
+    let adsToday = Number(localStorage.getItem('hr_adsToday')) || 0;
+    let invites = Number(localStorage.getItem('hr_invites')) || 0;
+    let method = 'telebirr';
     const today = new Date().toDateString();
-    if (localStorage.getItem("hamza_ads_date") !== today) {
+    if (localStorage.getItem('hr_date') !== today) {
       adsToday = 0;
-      localStorage.setItem("hamza_ads_today", 0);
-      localStorage.setItem("hamza_ads_date", today);
+      localStorage.setItem('hr_adsToday', 0);
+      localStorage.setItem('hr_date', today);
     }
 
-    function updatePoints() {
-      document.getElementById("points").textContent = points;
-      document.getElementById("adsToday").textContent = adsToday;
-      localStorage.setItem("hamza_points", points);
-      localStorage.setItem("hamza_ads_today", adsToday);
+    const uid = tg.initDataUnsafe?.user?.id || 'guest';
+    document.getElementById('uid').textContent = 'ID: ' + uid;
+    document.getElementById('refLink').textContent = 'https://t.me/YourBot?start=' + uid;
+
+    function updateUI() {
+      document.getElementById('points').textContent = points;
+      document.getElementById('pPoints').textContent = points;
+      document.getElementById('adsToday').textContent = adsToday;
+      document.getElementById('totalAds').textContent = totalAds;
+      document.getElementById('totalEarned').textContent = totalAds * 50;
+      document.getElementById('invites').textContent = invites;
+      document.getElementById('pInvites').textContent = invites;
+      localStorage.setItem('hr_points', points);
+      localStorage.setItem('hr_totalAds', totalAds);
+      localStorage.setItem('hr_adsToday', adsToday);
+      localStorage.setItem('hr_invites', invites);
     }
 
-    function message(text) {
-      document.getElementById("message").textContent = text;
-      setTimeout(() => document.getElementById("message").textContent = "", 3000);
+    function msg(t) {
+      document.getElementById('msg').textContent = t;
+      setTimeout(() => document.getElementById('msg').textContent = '', 3000);
     }
 
-    function preloadAd() {
-      if (typeof show_11961014 !== "function") return;
-      const ymid = String(tg.initDataUnsafe?.user?.id || "unknown");
-      show_11961014({ type: "preload", ymid: ymid }).catch(() => {});
+    function showPage(id, btn) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (btn) {
+        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
     }
 
     function watchAd() {
-      if (typeof show_11961014 !== "function") {
-        message("⚠️ Ad is not ready yet.");
+      if (typeof show_11961014 !== 'function') {
+        msg('⚠️ Ad not ready. Try again.');
         return;
       }
       if (adsToday >= 15) {
-        message("⏰ Daily limit reached (15 ads)");
+        msg('⏰ Daily limit reached (15)');
         return;
       }
-
-      const ymid = String(tg.initDataUnsafe?.user?.id || "unknown");
-      show_11961014({ ymid: ymid })
+      const ymid = String(uid);
+      show_11961014({ ymid })
         .then(() => {
           points += 50;
-          adsToday += 1;
-          updatePoints();
-          message("🎉 +50 points!");
-          preloadAd();
+          adsToday++;
+          totalAds++;
+          updateUI();
+          msg('🎉 +50 points!');
         })
-        .catch(() => {
-          message("❌ No ads available right now. Try later.");
-        });
+        .catch(() => msg('❌ No ads available now. Try later.'));
     }
 
-    function claimTask(btn, amount) {
-      if (btn.dataset.done === "yes") {
-        message("Task already completed");
-        return;
-      }
+    function claim(btn, amount) {
+      if (btn.classList.contains('done')) return;
       points += amount;
-      btn.dataset.done = "yes";
-      btn.textContent = "✓ Done";
-      updatePoints();
-      message("🎉 +" + amount + " points!");
+      btn.classList.add('done');
+      btn.textContent = '✓ Done';
+      updateUI();
+      msg('🎉 +' + amount + ' points!');
     }
 
-    function dailyCheckin(btn) {
-      const last = localStorage.getItem("hamza_checkin");
-      if (last === today) {
-        message("Already checked in today");
-        return;
+    function shareInvite() {
+      const link = 'https://t.me/YourBot?start=' + uid;
+      if (tg.openTelegramLink) {
+        tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('Join Hamza Rewards and earn!'));
+      } else {
+        navigator.clipboard?.writeText(link);
+        msg('Link copied!');
       }
-      points += 50;
-      localStorage.setItem("hamza_checkin", today);
-      btn.textContent = "✓ Done";
-      updatePoints();
-      message("🎉 +50 points!");
+      // Simulate invite for demo (remove in real)
+      // invites++; updateUI();
+    }
+
+    function sendSupport() {
+      const text = document.getElementById('supportText').value.trim();
+      if (!text) return msg('Please write your problem');
+      document.getElementById('supportText').value = '';
+      msg('✅ Message sent! We will reply soon.');
+    }
+
+    function selectMethod(btn, m) {
+      document.querySelectorAll('.method button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      method = m;
     }
 
     function withdraw() {
-      if (points < 1000) {
-        message("❌ Minimum 1000 points required");
-        return;
-      }
-      message("✅ Withdrawal request received!");
+      if (points < 1000) return msg('❌ Minimum 1000 points');
+      if (invites < 7) return msg('❌ Need at least 7 invites');
+      const amount = document.getElementById('wAmount').value;
+      const account = document.getElementById('wAccount').value;
+      if (!amount || !account) return msg('Fill amount and account');
+      msg('✅ Withdrawal request sent via ' + method.toUpperCase());
+      // In real app you would send this to your backend
     }
 
-    updatePoints();
-    preloadAd();
+    updateUI();
   </script>
 </body>
 </html>
